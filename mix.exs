@@ -1,4 +1,4 @@
-defmodule PeerageEc2.Mixfile do
+defmodule Peerage.Via.Ec2.Mixfile do
   use Mix.Project
 
   def project do
@@ -14,7 +14,7 @@ defmodule PeerageEc2.Mixfile do
 
   def description do
     """
-    A Peerage EC2 provider for easy clustering
+    A Peerage provider for easy clustering on AWS EC2 and Elastic Beanstalk
     """
   end
 

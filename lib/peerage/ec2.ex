@@ -1,6 +1,5 @@
 defmodule Peerage.Via.Ec2 do
   @behaviour Peerage.Provider
-  require Logger
 
   alias ExAws.EC2
   import SweetXml, only: [sigil_x: 2, xpath: 2, xpath: 3]
