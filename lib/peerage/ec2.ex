@@ -41,9 +41,7 @@ defmodule Peerage.Via.Ec2 do
   end
 
   defp hackney_opts() do
-    [{:connect_timeout, 500},
-     {:recv_timeout, 500},
-     :with_body]
+    [{:connect_timeout, 500}, {:recv_timeout, 500}, :with_body]
   end
 
   defp cluster_tag() do
