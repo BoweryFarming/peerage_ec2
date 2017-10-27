@@ -10,11 +10,11 @@ defmodule Peerage.Via.Ec2 do
 
   def poll() do
     %{body: doc} =
-      EC2.describe_instances(filters: ["tag:#{cluster_tag()}": cluster(), "instance-state-code": @running_state_code])
+      EC2.describe_instances(filters: ["tag:#{tag_name(:cluster)}": cluster(), "instance-state-code": @running_state_code])
       |> ExAws.request!(aws_opts())
 
     services = doc |> xpath(~x"//instancesSet/item"l, host: ~x"./privateIpAddress/text()",
-                                                      name: ~x"./tagSet/item[key='#{service_tag()}']/value/text()")
+                                                      name: ~x"./tagSet/item[key='#{tag_name(:service)}']/value/text()")
 
     Enum.map(services, fn(service) ->
       String.to_atom("#{service.name}@" <> to_string(service.host))
@@ -27,7 +27,7 @@ defmodule Peerage.Via.Ec2 do
       |> ExAws.request!(aws_opts())
 
     doc
-    |> xpath(~x"//tagSet/item[key='#{cluster_tag()}']/value/text()")
+    |> xpath(~x"//tagSet/item[key='#{tag_name(:cluster)}']/value/text()")
     |> to_string
   end
 
@@ -47,11 +47,7 @@ defmodule Peerage.Via.Ec2 do
     [{:connect_timeout, 500}, {:recv_timeout, 500}, :with_body]
   end
 
-  defp cluster_tag() do
-    Application.fetch_env!(:peerage_ec2, :cluster_tag)
-  end
-
-  defp service_tag() do
-    Application.fetch_env!(:peerage_ec2, :service_tag)
+  defp tag_name(key)
+    Application.fetch_env!(:peerage_ec2, :tags)[key]
   end
 end
