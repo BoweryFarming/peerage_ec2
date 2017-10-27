@@ -28,9 +28,9 @@ defmodule Peerage.Via.Ec2.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:ex_aws, "~> 1.1"},
       {:hackney, "~> 1.10"},
-      {:peerage, "~> 1.0"},
       {:sweet_xml, "~> 0.6.5"},
     ]
   end

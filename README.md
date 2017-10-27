@@ -1,4 +1,4 @@
-# Peerage AWS EC2 and Elastic Beanstalk Provider
+# Peerage EC2 Provider
 
 ![Peerage](https://github.com/mrluc/peerage) helps your nodes find each other.
 
@@ -32,7 +32,12 @@ Note that the latest hex version may be higher than what is listed here. You can
 See ![Peerage](https://github.com/mrluc/peerage) for setup instructions specific to that library. To configure the `Peerage.Via.Ec2` provider:
 
 ```elixir
-   config :peerage, via: Peerage.Via.Ec2
+   config :peerage, via: Peerage.Via.Ec2, aws_access_key_id: "...",
+                                          aws_secret_access_key: "...",
+                                          cluster_tag: "...",
+                                          service_tag: "..."
 ```
+
+`cluster_tag` and `service_tag` are mappings to tags set on your EC2 instances. If using Elastic Beanstalk, these tags are set within the EB environment configuration. The cluster tag is used to discover all nodes in your cluster ("production", "staging", etc). The service tag is used to name each node/service that is found ("accounts", "payments", etc).
 
 `Peerage.Via.Ec2` uses a polling mechanism, so a GenServer is not necessary.
