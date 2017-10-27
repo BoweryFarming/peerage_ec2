@@ -6,7 +6,7 @@ It supports DNS-based discovery, which means you can use it out of the box with 
 
 It also supports UDP-based discovery, so that nodes on the same network (like docker containers on the same host) can find each other.
 
-This library adds support for API-based discovery for nodes running in an AWS VPC on EC2 or Elastic Beanstalk.
+This library adds support for API-based discovery of nodes running in an AWS VPC on EC2 or Elastic Beanstalk.
 
 ## Installation
 
@@ -25,7 +25,7 @@ Add `peerage` and `peerage_ec2` to your list of dependencies in mix.exs, and sta
     end
 ```
 
-Note that the latest hex version may be higher than what is listed here. You can find the latest version on [hex](https://hex.pm/packages/peerage). You should match the version or alternatively you can use a looser version constraint like `"~> 1.0"`.
+Note that the latest hex versions may be higher than what is listed here. You can find the latest version on hex for [peerage](https://hex.pm/packages/peerage) and [peerage_ec2](https://hex.pm/packages/peerage_ec2). You should match the version or alternatively you can use a looser version constraint like `"~> 1.0"`.
 
 ## Usage
 
