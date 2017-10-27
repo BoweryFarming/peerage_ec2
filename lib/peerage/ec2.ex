@@ -2,7 +2,10 @@ defmodule Peerage.Via.Ec2 do
   alias ExAws.EC2
   import SweetXml, only: [sigil_x: 2, xpath: 2, xpath: 3]
 
+  # http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
   @metadata_api "http://169.254.169.254/latest/meta-data/"
+
+  # http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceState.html
   @running_state_code 16
 
   def poll() do
