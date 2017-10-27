@@ -47,7 +47,7 @@ defmodule Peerage.Via.Ec2 do
     [{:connect_timeout, 500}, {:recv_timeout, 500}, :with_body]
   end
 
-  defp tag_name(key)
+  defp tag_name(key) do
     Application.fetch_env!(:peerage_ec2, :tags)[key]
   end
 end
