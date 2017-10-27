@@ -34,10 +34,9 @@ See ![Peerage](https://github.com/mrluc/peerage) for setup instructions specific
 ```elixir
    config :peerage, via: Peerage.Via.Ec2, aws_access_key_id: "...",
                                           aws_secret_access_key: "...",
-                                          cluster_tag: "...",
-                                          service_tag: "..."
+                                          tags: [{:cluster, "..."}, {:service, "..."}]
 ```
 
-`cluster_tag` and `service_tag` are mappings to tags set on your EC2 instances. If using Elastic Beanstalk, these tags are set within the EB environment configuration. The cluster tag is used to discover all nodes in your cluster ("production", "staging", etc). The service tag is used to name each node/service that is found ("accounts", "payments", etc).
+`tags` are mappings to tags set on your EC2 instances. If using Elastic Beanstalk, these tags are set within the EB environment configuration. The cluster tag is used to discover all nodes in your cluster ("production", "staging", etc). The service tag is used to name each node/service that is found ("accounts", "payments", etc).
 
 `Peerage.Via.Ec2` uses a polling mechanism, so a GenServer is not necessary.
