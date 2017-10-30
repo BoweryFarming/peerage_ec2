@@ -1,4 +1,8 @@
 defmodule Peerage.Via.Ec2 do
+  @moduledoc """
+    A Peerage provider for easy clustering on AWS EC2 and Elastic Beanstalk
+  """
+
   alias ExAws.EC2
   import SweetXml, only: [sigil_x: 2, xpath: 2, xpath: 3]
 
@@ -8,6 +12,9 @@ defmodule Peerage.Via.Ec2 do
   # http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceState.html
   @running_state_code 16
 
+  @doc """
+    Periodically polls the metadata and EC2 API's for other nodes in the same cluster
+  """
   def poll() do
     %{body: doc} =
       EC2.describe_instances(filters: ["tag:#{tag_name(:cluster)}": cluster(), "instance-state-code": @running_state_code])

@@ -4,7 +4,7 @@ defmodule Peerage.Via.Ec2.Mixfile do
   def project do
     [
       app: :peerage_ec2,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       deps: deps(),
@@ -29,6 +29,7 @@ defmodule Peerage.Via.Ec2.Mixfile do
   defp deps do
     [
       {:ex_aws, "~> 1.1"},
+      {:ex_doc, "~> 0.18.1", only: :dev, runtime: false},
       {:hackney, "~> 1.10"},
       {:sweet_xml, "~> 0.6.5"},
     ]
