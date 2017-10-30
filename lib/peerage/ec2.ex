@@ -39,8 +39,8 @@ defmodule Peerage.Via.Ec2 do
   end
 
   defp aws_opts() do
-    [access_key_id: Application.fetch_env!(:peerage_ec2, :aws_access_key_id),
-     secret_access_key: Application.fetch_env!(:peerage_ec2, :aws_secret_access_key)]
+    [access_key_id: Application.fetch_env!(:peerage, :aws_access_key_id),
+     secret_access_key: Application.fetch_env!(:peerage, :aws_secret_access_key)]
   end
 
   defp hackney_opts() do
@@ -48,6 +48,6 @@ defmodule Peerage.Via.Ec2 do
   end
 
   defp tag_name(key) do
-    Application.fetch_env!(:peerage_ec2, :tags)[key]
+    Application.fetch_env!(:peerage, :tags)[key]
   end
 end
