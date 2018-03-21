@@ -7,11 +7,11 @@ defmodule Peerage.Via.Ec2.SignedUrlTest do
 
   describe "build/1" do
     test "returns a signed URL with the expected signature" do
-      with_mock SignedUrl.RequestTime, [now: fn() -> ~N[1980-10-17 01:23:45] end] do
+      with_mock SignedUrl.RequestTime, now: fn -> ~N[1980-10-17 01:23:45] end do
         signed =
           "https://ec2.amazonaws.com/?Action=DescribeInstances&Version=2016-11-15"
           |> SignedUrl.build()
-          |> URI.parse
+          |> URI.parse()
 
         assert signed.host == "ec2.amazonaws.com"
         assert signed.scheme == "https"
@@ -31,7 +31,7 @@ defmodule Peerage.Via.Ec2.SignedUrlTest do
         signed_params =
           signed.query
           |> URI.query_decoder()
-          |> Enum.to_list
+          |> Enum.to_list()
 
         assert signed_params == expected_params
       end
@@ -40,7 +40,7 @@ defmodule Peerage.Via.Ec2.SignedUrlTest do
 
   describe "RequestTime.now/0" do
     test "a current naive date time" do
-      expected = DateTime.utc_now |> DateTime.to_naive
+      expected = DateTime.utc_now() |> DateTime.to_naive()
       now = SignedUrl.RequestTime.now()
       assert now.__struct__ == NaiveDateTime
       diff = NaiveDateTime.diff(now, expected)

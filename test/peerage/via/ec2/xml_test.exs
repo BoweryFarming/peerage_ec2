@@ -2,7 +2,7 @@ defmodule Peerage.Via.Ec2.XmlTest do
   use ExUnit.Case, async: true
 
   require Record
-  Record.defrecord :xmlElement, Record.extract(:xmlElement, from_lib: "xmerl/include/xmerl.hrl")
+  Record.defrecord(:xmlElement, Record.extract(:xmlElement, from_lib: "xmerl/include/xmerl.hrl"))
 
   import Peerage.Via.Ec2.Xml
 
@@ -14,7 +14,10 @@ defmodule Peerage.Via.Ec2.XmlTest do
   describe "all/2" do
     test "returns all nodes for a given path", %{document: document} do
       parsed = document |> parse
-      results = Enum.map(all(parsed, "//instancesSet/item"), fn(node) -> xmlElement(node, :name) end)
+
+      results =
+        Enum.map(all(parsed, "//instancesSet/item"), fn node -> xmlElement(node, :name) end)
+
       assert results == [:item, :item]
     end
 
