@@ -17,7 +17,7 @@ Add `peerage_ec2` to your list of dependencies in mix.exs:
 ```elixir
     def deps do
       [
-        {:peerage_ec2, "~> 1.1.0"},
+        {:peerage_ec2, "~> 1.2.0"},
       ]
     end
 ```
