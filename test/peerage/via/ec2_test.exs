@@ -26,10 +26,12 @@ defmodule Peerage.Via.Ec2Test do
                                                    running_services_response: running_services_response} do
       with_mocks([
         {RequestTime, [], [now: fn() -> @now end]},
-        {:httpc, [], [request: fn
-                        ^metadata_api_url -> successful_response(@instance_id)
-                        ^cluster_name_url -> successful_response(cluster_name_response)
-                        ^running_services_url -> successful_response(running_services_response)
+        {:httpc, [], [request: fn(:get, {url, _}, _, _) ->
+                        case url do
+                          ^metadata_api_url -> successful_response(@instance_id)
+                          ^cluster_name_url -> successful_response(cluster_name_response)
+                          ^running_services_url -> successful_response(running_services_response)
+                        end
                       end]}]) do
 
         assert Ec2.poll() == [:"gardiner@172.21.22.53", :"falkner@170.31.21.52"]
@@ -39,7 +41,7 @@ defmodule Peerage.Via.Ec2Test do
     test "returns an empty list when metadata request fails", %{metadata_api_url: metadata_api_url} do
       with_mocks([
         {RequestTime, [], [now: fn() -> @now end]},
-        {:httpc, [], [request: fn(^metadata_api_url) -> failed_response() end]}]) do
+        {:httpc, [], [request: fn(:get, {^metadata_api_url, _}, _, _) -> failed_response() end]}]) do
         assert Ec2.poll() == []
       end
     end
@@ -48,9 +50,11 @@ defmodule Peerage.Via.Ec2Test do
                                                                     cluster_name_url: cluster_name_url} do
       with_mocks([
         {RequestTime, [], [now: fn() -> @now end]},
-        {:httpc, [], [request: fn
-                        ^metadata_api_url -> successful_response(@instance_id)
-                        ^cluster_name_url -> failed_response()
+        {:httpc, [], [request: fn(:get, {url, _}, _, _) ->
+                        case url do
+                          ^metadata_api_url -> successful_response(@instance_id)
+                          ^cluster_name_url -> failed_response()
+                        end
                       end]}]) do
 
         assert Ec2.poll() == []
@@ -63,10 +67,12 @@ defmodule Peerage.Via.Ec2Test do
                                                                         cluster_name_response: cluster_name_response} do
       with_mocks([
         {RequestTime, [], [now: fn() -> @now end]},
-        {:httpc, [], [request: fn
-                        ^metadata_api_url -> successful_response(@instance_id)
-                        ^cluster_name_url -> successful_response(cluster_name_response)
-                        ^running_services_url -> failed_response()
+        {:httpc, [], [request: fn(:get, {url, _}, _, _) ->
+                        case url do
+                          ^metadata_api_url -> successful_response(@instance_id)
+                          ^cluster_name_url -> successful_response(cluster_name_response)
+                          ^running_services_url -> failed_response()
+                        end
                       end]}]) do
 
         assert Ec2.poll() == []

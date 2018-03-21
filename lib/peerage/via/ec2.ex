@@ -22,13 +22,15 @@ defmodule Peerage.Via.Ec2 do
     #
     # AWS Documentation: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
     metadata_api = 'http://169.254.169.254/latest/meta-data/instance-id'
-    case :httpc.request(metadata_api) do
+
+    case request(metadata_api) do
       {:ok, {{_, 200, _}, _headers, body}} -> to_string(body)
       _ -> :error
     end
   end
 
   defp fetch_cluster_name(:error), do: :error
+
   defp fetch_cluster_name(instance_id) do
     # Having retrieved the instance_id of the current EC2 instance,
     # we'll peform a signed/authenticated request to Amazon's EC2
@@ -40,19 +42,22 @@ defmodule Peerage.Via.Ec2 do
       |> Map.put("Filter.1.Value.1", instance_id)
       |> describe_endpoint()
       |> SignedUrl.build()
-      |> to_charlist
+      |> to_charlist()
 
-    case :httpc.request(request_uri) do
+    case request(request_uri) do
       {:ok, {{_, 200, _}, _headers, body}} ->
         body
-        |> Xml.parse
+        |> Xml.parse()
         |> Xml.first("//tagSet/item[key='#{tag_name(:cluster)}']/value")
-        |> Xml.text
-      _ -> :error
+        |> Xml.text()
+
+      _ ->
+        :error
     end
   end
 
   defp fetch_running_services(:error), do: :error
+
   defp fetch_running_services(cluster_name) do
     # Having retrieved the cluster_name, we'll peform a
     # signed/authenticated request to Amazon's EC2
@@ -71,24 +76,27 @@ defmodule Peerage.Via.Ec2 do
       |> Map.put("Filter.2.Value.1", cluster_name)
       |> describe_endpoint()
       |> SignedUrl.build()
-      |> to_charlist
+      |> to_charlist()
 
-    case :httpc.request(request_uri) do
+    case request(request_uri) do
       {:ok, {{_, 200, _}, _headers, body}} ->
         instances = Xml.parse(body)
 
-        Enum.map(Xml.all(instances, "//instancesSet/item"), fn(node) ->
-          host = Xml.first(node, "//privateIpAddress") |> Xml.text
-          service = Xml.first(node, "//tagSet/item[key='service']/value") |> Xml.text
+        Enum.map(Xml.all(instances, "//instancesSet/item"), fn node ->
+          host = Xml.first(node, "//privateIpAddress") |> Xml.text()
+          service = Xml.first(node, "//tagSet/item[key='service']/value") |> Xml.text()
           %{host: host, name: service}
         end)
-      _ -> :error
+
+      _ ->
+        :error
     end
   end
 
   defp format_services_list(:error), do: []
+
   defp format_services_list(services) do
-    Enum.map(services, fn(service) ->
+    Enum.map(services, fn service ->
       String.to_atom("#{service.name}@" <> to_string(service.host))
     end)
   end
@@ -98,9 +106,11 @@ defmodule Peerage.Via.Ec2 do
       filters
       |> Map.put("Action", "DescribeInstances")
       |> Map.put("Version", "2016-11-15")
-      |> URI.encode_query
+      |> URI.encode_query()
+
     "https://ec2.amazonaws.com/?" <> query_string
   end
 
+  defp request(uri), do: :httpc.request(:get, {uri, []}, [timeout: 1000], [])
   defp tag_name(key), do: Application.fetch_env!(:peerage_ec2, :tags)[key]
 end
