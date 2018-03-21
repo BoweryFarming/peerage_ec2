@@ -111,6 +111,7 @@ defmodule Peerage.Via.Ec2 do
     "https://ec2.amazonaws.com/?" <> query_string
   end
 
-  defp request(uri), do: :httpc.request(:get, {uri, []}, [timeout: 1000], [])
+  defp request(uri), do: :httpc.request(:get, {uri, []}, [timeout: timeout()], [])
   defp tag_name(key), do: Application.fetch_env!(:peerage_ec2, :tags)[key]
+  defp timeout(), do: Application.get_env(:peerage_ec2, :timeout, 1000)
 end

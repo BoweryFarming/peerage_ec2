@@ -3,6 +3,9 @@
 use Mix.Config
 
 config :peerage, via: Peerage.Via.Ec2
-config :peerage_ec2, aws_access_key_id: "example",
-                     aws_secret_access_key: "key",
-                     tags: [{:cluster, "cluster"}, {:service, "service"}]
+
+config :peerage_ec2,
+  aws_access_key_id: "example",
+  aws_secret_access_key: "key",
+  tags: [{:cluster, "cluster"}, {:service, "service"}],
+  timeout: 1000
